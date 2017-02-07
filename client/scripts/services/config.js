@@ -5,11 +5,11 @@
 angular.module('myApp').config(function($routeProvider, $locationProvider, $httpProvider) {
   // Initialize Firebase
   var config = {
-    apiKey: "<API_KEY>",
-    authDomain: "<PROJECT_ID>.firebaseapp.com",
-    databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
-    storageBucket: "<BUCKET>.appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID"
+    apiKey: "AIzaSyDSxw3f7yGXkkMA6WENz1hAqYGMxT328i0",
+    authDomain: "djs-palfinder.firebaseapp.com",
+    databaseURL: "https://djs-palfinder.firebaseio.com",
+    storageBucket: "djs-palfinder.appspot.com",
+    messagingSenderId: "666869279860"
   };
   firebase.initializeApp(config);
 
