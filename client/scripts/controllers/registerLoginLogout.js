@@ -8,12 +8,27 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
     * @memberOf registerLogInLogOut
     * @description Handles uer registration. Creates a new user (uding Firebase native method 'createUserWithEmailAndPassword'). Extracts username from user's email (username is anything that comes before @ symbol e.g. john06@gmail.com will have username of john06). Uses promises to add user to the database after they are created. Each user is listed under their unique Id provided by Firebase authentication system (user.uid)
   */
+
+  
+
+  $rootScope.team = true;
+  $scope.assignTeam = function () {
+    $scope.team = !$scope.team;
+    if ($scope.team) {
+      return "blue";
+    } else {
+      return "red";
+    }
+  };
+
   $scope.register = function() {
     var register = databaseAndAuth.auth.createUserWithEmailAndPassword($scope.email, $scope.password);
+    var myTeam = assignTeam();
     register.then(function(user) {
       databaseAndAuth.database.ref('users/' + user.uid).set({
         username: $scope.email.slice(0, $scope.email.indexOf('@')),
         email: $scope.email,
+        team: myTeam
       });
       $rootScope.loggedIn = true;
       $location.path('/map');
