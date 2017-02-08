@@ -18,6 +18,7 @@ app.use('/scripts', express.static(path.join(__dirname, '/../client/scripts')));
 app.use(express.static(__dirname + '/../client'));
 
 app.get('*', function (req, res) {
+  console.log('server serving : ', req.method, ' @ ', req.url);
   res.sendFile(path.join(__dirname, '/../client/index.html'));
 });
 
