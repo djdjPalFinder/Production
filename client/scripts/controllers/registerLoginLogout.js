@@ -8,12 +8,33 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
     * @memberOf registerLogInLogOut
     * @description Handles uer registration. Creates a new user (uding Firebase native method 'createUserWithEmailAndPassword'). Extracts username from user's email (username is anything that comes before @ symbol e.g. john06@gmail.com will have username of john06). Uses promises to add user to the database after they are created. Each user is listed under their unique Id provided by Firebase authentication system (user.uid)
   */
+
+  //
+  $rootScope.r = 0;
+  $rootScope.b = 0;
+  //maybe can change to $scope.bool... needs to be tested
+  $rootScope.bool = true;
+  $scope.assignTeam = function () {
+    $rootScope.bool = !$rootScope.bool;
+    if($rootScope.bool) {
+      $rootScope.b += 1;
+      return "blue";
+    } else {
+      $rootScope.r += 1;
+      return "red";
+    }
+  };
+
   $scope.register = function() {
     var register = databaseAndAuth.auth.createUserWithEmailAndPassword($scope.email, $scope.password);
+    var myteam = $scope.assignTeam();
+    console.log($rootScope.b, "team blue!");
+    console.log($rootScope.r, "team red!");
     register.then(function(user) {
       databaseAndAuth.database.ref('users/' + user.uid).set({
         username: $scope.email.slice(0, $scope.email.indexOf('@')),
         email: $scope.email,
+        team: myteam
       });
       $rootScope.loggedIn = true;
       $location.path('/map');
@@ -85,10 +106,21 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
     * @memberOf registerLogInLogOut
     * @description controls the signup button if you are not logged in ($rootScope.attemptSignup is false). The function toggles the attemptSignup variable depending on the user's status (logged in or not)
   */
+  $rootScope.team = false;
   $rootScope.attemptSignup = false;
   $scope.signUp = function () {
     console.log($rootScope.attemptSignup);
     $rootScope.attemptSignup = !$rootScope.attemptSignup;
+
+    console.log($scope, "scope obj within signup");
+    //implement team assignment
+    // if(!$rootScope.team) {
+    //   //place on red team
+    // } else {
+    //   //place on blue team
+    // }
+    $rootScope.team = !$rootScope.team;
+
     $location.path('/signup');
   }
   /**

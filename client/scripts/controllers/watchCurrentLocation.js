@@ -35,6 +35,8 @@ angular.module('myApp').controller('watchCurrentUserLocation', function($rootSco
   };
   
   $scope.$on('user:logIn', function(event, data) {
+    console.log(data, "data inside watchCurrentUserLocation controller")
+    //data is the user's hash
     $scope.userId = data; 
     navigator.geolocation.watchPosition(success, error, options);
   });

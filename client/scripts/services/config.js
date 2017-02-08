@@ -5,11 +5,11 @@
 angular.module('myApp').config(function($routeProvider, $locationProvider, $httpProvider) {
   // Initialize Firebase
   var config = {
-    apiKey: "AIzaSyDSxw3f7yGXkkMA6WENz1hAqYGMxT328i0",
-    authDomain: "djs-palfinder.firebaseapp.com",
-    databaseURL: "https://djs-palfinder.firebaseio.com",
-    storageBucket: "djs-palfinder.appspot.com",
-    messagingSenderId: "666869279860"
+    apiKey: "AIzaSyDmF-D2pSbPV7CqAeiuiUexrIASPf6wwr0",
+    authDomain: "phonetag-b8b41.firebaseapp.com",
+    databaseURL: "https://phonetag-b8b41.firebaseio.com",
+    storageBucket: "phonetag-b8b41.appspot.com",
+    messagingSenderId: "967535791489"
   };
   firebase.initializeApp(config);
 
@@ -51,7 +51,7 @@ angular.module('myApp').config(function($routeProvider, $locationProvider, $http
         */
       if (localStorage.getItem('user')){
         console.log(localStorage.getItem('user'));
-        $rootScope.loggedIn = true;
+        $rootScope.loggedIn = false;
       }
       /**
         * @class $rootScope.attemptSignup 
@@ -68,7 +68,7 @@ angular.module('myApp').config(function($routeProvider, $locationProvider, $http
         if ($rootScope.accessProfile === true) {
           console.log('accessing profile');
           $location.path('/profile');
-        }
+        } 
         else if ($rootScope.loggedIn === true) {
           console.log("logged in!");
           // no logged user, redirect to /login
