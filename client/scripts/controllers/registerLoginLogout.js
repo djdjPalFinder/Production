@@ -38,26 +38,7 @@ if (Object.keys(databaseAndAuth.users).length === 0) {
 
 
   //
-<<<<<<< HEAD
-  $rootScope.r = 0;
-  $rootScope.b = 0;
-  //maybe can change to $scope.bool... needs to be tested
-  $rootScope.bool = true;
-  console.log($rootScope.bool, "bool for team assign")
-  $scope.assignTeam = function () {
-    $rootScope.bool = !$rootScope.bool;
-    if($rootScope.bool) {
-      $rootScope.b += 1;
-      return "blue";
-    } else {
-      $rootScope.r += 1;
-      return "red";
-    }
-  };
-//need to set up a category in firebase for a team assignment boolean
-  //when new user signs up, toggle
-    //then assign based on this value (from DB)
-=======
+
   // $rootScope.r = 0;
   // $rootScope.b = 0;
   // //maybe can change to $scope.bool... needs to be tested
@@ -73,7 +54,7 @@ if (Object.keys(databaseAndAuth.users).length === 0) {
   //   }
   // };
 
->>>>>>> df62c79f181dc5ed30c1a888b755d633c07fe77f
+
   $scope.register = function() {
     var register = databaseAndAuth.auth.createUserWithEmailAndPassword($scope.email, $scope.password);
 
