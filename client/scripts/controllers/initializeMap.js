@@ -22,35 +22,47 @@ angular.module('myApp').controller('initializeMap', function($scope, databaseAnd
     // console.log('databaseanauth.users', databaseAndAuth.users);
     $scope.$apply();
   });
+  $scope.socket = io();
+  $scope.clientId = null;
+  $scope.client = new BinaryClient('ws://localhost:9000');
+  $scope.getSong = function() {
+    console.log('Inside getSong');
+    $scope.socket.emit('getSong', $scope.clientId);
+  };
+  
+  $scope.client.on('stream', function(stream, meta) {
+    console.log('server sent an mp3 file');
+    var parts = [];
+    var audioPlayer = document.getElementById('audioPlayer');
+    audioPlayer.preload = true;
+    audioPlayer.autoplay = true;
+    audioPlayer.controls = 'controls';
+    
+    stream.on('data', function(data) {
+      parts.push(data);
+    });
+    
+    stream.on('end', function() {
+      console.log('ended', parts);
+      audioPlayer.src = (window.URL || window.webkitURL).createObjectURL( new Blob(parts) );
+      $scope.socket.emit('songStarted', $scope.clientId);
+    });
+  }); 
 
-  var allUsers = databaseAndAuth.users;
+  $scope.client.on('open', function() {
+    $scope.socket.emit('getId');
+    console.log('open connection with binaryJS Server');
+  });
 
+  $scope.socket.on('getId', function(clientId) {
+    $scope.clientId = clientId;
+    console.log('inside getId event listener');
+  });
 
-  NgMap.getMap().then(function(map) {
-    // console.log('allUsers', allUsers);
-    // for (var key in allUsers) {
-    //   console.log('cycling in for in')
-    //   if (allUsers[key].team === 'blue') {
-    //     console.log('teamblue');
-
-    //     // set the pin color to blue
-    //     var pinColor = "1A1AFF";
-    //     // constructor for the pin image
-    //     var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
-    //        new google.maps.Size(21, 34),
-    //        new google.maps.Point(0,0),
-    //        new google.maps.Point(10, 34));
-
-    //       // map.customMarkers.blue.setIcon(icon: pinImage);
-
-    //       // constructor for new marker, sets new marker
-    //       var marker = new google.maps.Marker({
-    //       map: map,
-    //       icon: pinImage
-    //       });
-
-    //   }
-    // };
+  $scope.socket.on('changePlayTime', function(currentSongTime) {
+    var audioPlayer = document.getElementById('audioPlayer');
+    audioPlayer.currentTime = currentSongTime;
+    console.log('inside changePlayTime event listener');
   });
 
 });

@@ -106,7 +106,7 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
     }
   };
 
-  setInterval($scope.checkUserLocation, 90000);
+  setInterval($scope.checkUserLocation, 180000);
 
   $scope.logOut = function() {
     //on logout remove the user's coordinates from database
