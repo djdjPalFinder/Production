@@ -26,16 +26,16 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
       //team assignment
       var assignedTeam;
       if(databaseAndAuth.team.bool) {
-        var count = databaseAndAuth.team.blue + 1;
-        databaseAndAuth.database.ref('team/').update({
-          blue: count
-        });
+        // var count = databaseAndAuth.team.blue + 1;
+        // databaseAndAuth.database.ref('team/').update({
+        //   blue: count
+        // });
         assignedTeam = 'blue';
       } else {
-        var count = databaseAndAuth.team.red + 1;
-        databaseAndAuth.database.ref('team/').update({
-          red: count
-        });
+        // var count = databaseAndAuth.team.red + 1;
+        // databaseAndAuth.database.ref('team/').update({
+        //   red: count
+        // });
         assignedTeam = 'red';
       }
       databaseAndAuth.database.ref('users/' + user.uid).update({

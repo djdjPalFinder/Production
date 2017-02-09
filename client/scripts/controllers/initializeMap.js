@@ -23,6 +23,19 @@ angular.module('myApp').controller('initializeMap', function($scope, databaseAnd
     $scope.$apply();
   });
 
+  $scope.setPinIcon = function (user) {
+    var icons = {
+      blue: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+      red: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+    };
+
+    if (user.team === 'blue') {
+      return icons.blue;
+    } else if (user.team === 'red') {
+      return icons.red;
+    }
+  };
+
   var allUsers = databaseAndAuth.users;
 
 
@@ -41,13 +54,13 @@ angular.module('myApp').controller('initializeMap', function($scope, databaseAnd
     //        new google.maps.Point(0,0),
     //        new google.maps.Point(10, 34));
 
-    //       // map.customMarkers.blue.setIcon(icon: pinImage);
+    //       map.customMarkers.blue.setVisible(true);
 
     //       // constructor for new marker, sets new marker
-    //       var marker = new google.maps.Marker({
-    //       map: map,
-    //       icon: pinImage
-    //       });
+    //       // var marker = new google.maps.Marker({
+    //       // map: map,
+    //       // icon: pinImage
+    //       // });
 
     //   }
     // };

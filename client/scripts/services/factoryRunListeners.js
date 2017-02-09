@@ -69,7 +69,7 @@ angular.module('myApp').factory('runListeners', function(databaseAndAuth, $rootS
 
   listener.initUsers = function () {
     databaseAndAuth.database.ref('users').once('value', function (snapshot) {
-      console.log('snapshot in initUSers', snapshot.val());
+      console.log('snapshot in initUsers', snapshot.val());
       databaseAndAuth.users = snapshot.val();
     })
   }
