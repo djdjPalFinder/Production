@@ -133,6 +133,7 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
 
       console.log('calling this function');
       localStorage.setItem('user', databaseUser);
+      runListeners.initUsers();
       runListeners.childChanged();
       runListeners.childAdded();
       runListeners.childRemoved();

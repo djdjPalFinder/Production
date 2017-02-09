@@ -54,5 +54,12 @@ angular.module('myApp').factory('runListeners', function(databaseAndAuth, $rootS
     });
   }
 
+  listener.initUsers = function () {
+    databaseAndAuth.database.ref('users').once('value', function (snapshot) {
+      console.log('snapshot in initUSers', snapshot.val());
+      databaseAndAuth.users = snapshot.val();
+    })
+  }
+
   return listener;
 });
