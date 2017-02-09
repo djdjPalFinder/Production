@@ -15,7 +15,7 @@
     <directions suppress-markers="true"></directions>
     <div ng-repeat="(key, value) in userLocations" >
       <marker position="{{value.coordinates.latitude}}, {{value.coordinates.longitude}}"></marker>
-      <custom-marker position="{{value.coordinates.latitude}}, {{value.coordinates.longitude}}">
+      <custom-marker id={{value.team}} position="{{value.coordinates.latitude}}, {{value.coordinates.longitude}}">
         <p class="user-label">{{value.username}}</p>
       </custom-marker>
     </div>

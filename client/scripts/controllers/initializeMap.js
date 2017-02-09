@@ -41,16 +41,16 @@ angular.module('myApp').controller('initializeMap', function($scope, databaseAnd
     //        new google.maps.Point(0,0),
     //        new google.maps.Point(10, 34));
 
-          //map.customMarkers.blue.setIcon(icon: pinImage);
+    //       // map.customMarkers.blue.setIcon(icon: pinImage);
 
-          // // constructor for new marker, sets new marker
-          // var marker = new google.maps.Marker({
-          // map: map,
-          // icon: pinImage
-          // });
+    //       // constructor for new marker, sets new marker
+    //       var marker = new google.maps.Marker({
+    //       map: map,
+    //       icon: pinImage
+    //       });
 
-      // }
-  //   };
+    //   }
+    // };
   });
 
 });

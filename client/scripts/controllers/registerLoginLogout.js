@@ -18,7 +18,7 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
       databaseAndAuth.database.ref('users/' + user.uid).set({
         username: $scope.email.slice(0, $scope.email.indexOf('@')),
         email: $scope.email,
-        team: 'filler'
+        team: 'red'
       });
       $rootScope.loggedIn = true;
       
@@ -146,18 +146,12 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
       $rootScope.$broadcast('user:logIn', databaseUser.uid);
       $scope.userId = databaseUser.uid;
       //set the team if it doesn't already exist
-      if (Object.keys(databaseAndAuth.users).length === 0) {
+      if (Object.keys(databaseAndAuth.users).length === 1) {
         console.log('should not run')
-        var teamInit = {bool: true, red: 0, blue: 0};
+        var teamInit = {bool: true, red: 1, blue: 0};
         databaseAndAuth.database.ref('team').set(teamInit);
       }
       $scope.$apply();
-
-      if (Object.keys(databaseAndAuth.users).length === 0) {
-        console.log('should not run')
-        var teamInit = {bool: true, red: 0, blue: 0};
-        databaseAndAuth.database.ref('team').set(teamInit);
-      }
 
 
     } else {

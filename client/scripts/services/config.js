@@ -5,11 +5,11 @@
 angular.module('myApp').config(function($routeProvider, $locationProvider, $httpProvider) {
   // Initialize Firebase
   var config = {
-    apiKey: "AIzaSyAiDsDXfoClsr5ATm_eeX2qQQPtjrCwTM8",
-    authDomain: "impetuous-85f37.firebaseapp.com",
-    databaseURL: "https://impetuous-85f37.firebaseio.com",
-    storageBucket: "impetuous-85f37.appspot.com",
-    messagingSenderId: "951855512682"
+    apiKey: "AIzaSyDwImvGhB-lbBSlMwHaoH_wMhuRen4c5CI",
+    authDomain: "perched-dd384.firebaseapp.com",
+    databaseURL: "https://perched-dd384.firebaseio.com",
+    storageBucket: "perched-dd384.appspot.com",
+    messagingSenderId: "791147440152"
   };
   firebase.initializeApp(config);
 
