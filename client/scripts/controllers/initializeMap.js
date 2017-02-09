@@ -64,5 +64,29 @@ angular.module('myApp').controller('initializeMap', function($scope, databaseAnd
     audioPlayer.currentTime = currentSongTime;
     console.log('inside changePlayTime event listener');
   });
+  // Youtube
+  axios({
+    url: 'https://www.googleapis.com/youtube/v3/search',
+    method: 'get',
+    params: {
+      part: 'snippet',
+      // remember to hide the key to a variable!
+      key: 'AIzaSyDFXqX6S69-lw5DsBdYgsygRoBavtNPyKY',
+      q: context.state.value
+    }
+  })
+  .then( function(youtubeResponse) {
+  // wait for Youtube res to come back
+    console.log('youtube search success!');
+    // grab the array of videos, which live in data.items
+    var searchResult = youtubeResponse.data.items;
 
+    context.setState({searchResults: searchResult});
+
+    console.log('This is youtubeResponse : ', youtubeResponse);
+
+  })
+  .catch( function(err) {
+    console.log('youtube search fail', err);
+  });
 });
