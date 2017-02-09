@@ -5,12 +5,12 @@
 angular.module('myApp').config(function($routeProvider, $locationProvider, $httpProvider) {
   // Initialize Firebase
   var config = {
-      apiKey: "AIzaSyBJLwrmDAXzxaqlNsRt25cdZe-VK4VeBWg",
-      authDomain: "succulent-444b9.firebaseapp.com",
-      databaseURL: "https://succulent-444b9.firebaseio.com",
-      storageBucket: "succulent-444b9.appspot.com",
-      messagingSenderId: "919032950731"
-    };
+    apiKey: "AIzaSyAiDsDXfoClsr5ATm_eeX2qQQPtjrCwTM8",
+    authDomain: "impetuous-85f37.firebaseapp.com",
+    databaseURL: "https://impetuous-85f37.firebaseio.com",
+    storageBucket: "impetuous-85f37.appspot.com",
+    messagingSenderId: "951855512682"
+  };
   firebase.initializeApp(config);
 
   $locationProvider.html5Mode({

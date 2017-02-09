@@ -46,8 +46,11 @@ angular.module('myApp').factory('runListeners', function(databaseAndAuth, $rootS
 
   listener.teamAssigned = function () {
     databaseAndAuth.database.ref('team').on('value', function (snapshot) {
-      console.log('snapshot', snapshot)
-      databaseAndAuth.team = snapshot;
+      console.log('snapshot', snapshot.val())
+      databaseAndAuth.team = snapshot.val();
+
+      // $rootScope.$broadcast('team:')
+      console.log("database inside factory", databaseAndAuth.team)
     });
   }
 

@@ -5,6 +5,7 @@
 
 angular.module('myApp').controller('initializeMap', function($scope, databaseAndAuth, NgMap) {
 
+
   $scope.$on('user:updatedOrAdded', function(event, data) {
     $scope.userLocations[data[0]] = data[1];
     console.log('user location added or updated', data[1]);
@@ -18,6 +19,7 @@ angular.module('myApp').controller('initializeMap', function($scope, databaseAnd
 
   $scope.$on('user:logIn', function(event, data) {
     $scope.userLocations = databaseAndAuth.users;
+    // console.log('databaseanauth.users', databaseAndAuth.users);
     $scope.$apply();
   });
 
@@ -25,30 +27,30 @@ angular.module('myApp').controller('initializeMap', function($scope, databaseAnd
 
 
   NgMap.getMap().then(function(map) {
-    console.log('allUsers', allUsers);
-    for (var key in allUsers) {
-      console.log('cycling in for in')
-      if (allUsers[key].team === 'blue') {
-        console.log('teamblue');
+    // console.log('allUsers', allUsers);
+    // for (var key in allUsers) {
+    //   console.log('cycling in for in')
+    //   if (allUsers[key].team === 'blue') {
+    //     console.log('teamblue');
 
-        // set the pin color to blue
-        var pinColor = "1A1AFF";
-        // constructor for the pin image
-        var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
-           new google.maps.Size(21, 34),
-           new google.maps.Point(0,0),
-           new google.maps.Point(10, 34));
+    //     // set the pin color to blue
+    //     var pinColor = "1A1AFF";
+    //     // constructor for the pin image
+    //     var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
+    //        new google.maps.Size(21, 34),
+    //        new google.maps.Point(0,0),
+    //        new google.maps.Point(10, 34));
 
-        //map.customMarkers.blue.setIcon(icon: pinImage);
+          //map.customMarkers.blue.setIcon(icon: pinImage);
 
-        // // constructor for new marker, sets new marker
-        // var marker = new google.maps.Marker({
-        // map: map,
-        // icon: pinImage
-        // });
+          // // constructor for new marker, sets new marker
+          // var marker = new google.maps.Marker({
+          // map: map,
+          // icon: pinImage
+          // });
 
-      }
-    };
+      // }
+  //   };
   });
 
 });
