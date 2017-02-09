@@ -1,6 +1,6 @@
-/**
+ /**
   * @class runListeners
-  * @description Factory that sets up the database listeners. Firebase enables real-time updates any time database entries change, and the listeners in this factory get notified. The updated data is then routed to appropriate controllers (e.g. for rendering new user position on the map). 
+  * @description Factory that sets up the database listeners. Firebase enables real-time updates any time database entries change, and the listeners in this factory get notified. The updated data is then routed to appropriate controllers (e.g. for rendering new user position on the map).
   @returns {Object} Returns the factory object ('listener') with all methods to be used by controllers
 */
 angular.module('myApp').factory('runListeners', function(databaseAndAuth, $rootScope) {
@@ -13,7 +13,7 @@ angular.module('myApp').factory('runListeners', function(databaseAndAuth, $rootS
   listener.childChanged = function () {
     databaseAndAuth.database.ref('users').on('child_changed', function(snapshot) {
       //add the changed database item to our databaseAndAuth.users object
-      //so it can be accessed accross all controllers 
+      //so it can be accessed accross all controllers
       databaseAndAuth.users[snapshot.key] = snapshot.val();
       $rootScope.$broadcast('user:updatedOrAdded', [snapshot.key, snapshot.val()]);
       console.log('child changed', snapshot.val());
@@ -23,7 +23,7 @@ angular.module('myApp').factory('runListeners', function(databaseAndAuth, $rootS
   /**
     * @function childAdded
     * @memberOf runListeners
-    * @description Listens for new user entries (e.g. when a new user sets up an account and gets added to the database). 
+    * @description Listens for new user entries (e.g. when a new user sets up an account and gets added to the database).
   */
   listener.childAdded = function () {
     databaseAndAuth.database.ref('users').on('child_added', function(snapshot) {
@@ -43,5 +43,36 @@ angular.module('myApp').factory('runListeners', function(databaseAndAuth, $rootS
       $rootScope.$broadcast('user:deleted', [snapshot.key, snapshot.val()]);
     });
   };
+
+  /**
+    * @function teamAssigned
+    * @memberOf runListeners
+    * @description Listens for team assignment to 'red' or 'blue'
+  */
+
+  listener.teamAssigned = function () {
+    databaseAndAuth.database.ref('team').on('value', function (snapshot) {
+      console.log('snapshot', snapshot.val())
+      databaseAndAuth.team = snapshot.val();
+
+      // $rootScope.$broadcast('team:')
+      console.log("database inside factory", databaseAndAuth.team)
+    });
+  }
+
+  /**
+    * @function initUsers
+    * @memberOf runListeners
+    * @description initializes the users in database factory object from firebase when user logs in
+  */
+
+
+  listener.initUsers = function () {
+    databaseAndAuth.database.ref('users').once('value', function (snapshot) {
+      console.log('snapshot in initUSers', snapshot.val());
+      databaseAndAuth.users = snapshot.val();
+    })
+  }
+
   return listener;
 });

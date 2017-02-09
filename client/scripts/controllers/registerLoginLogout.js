@@ -3,21 +3,52 @@
   * @description Controller for that handles user registration (new user), user login, and user logout. Makes use of databaseAndAuth and runListeners factories.
 */
 angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $scope, $location, databaseAndAuth, runListeners) {
+
   /**
     * @function '$scope.register'
     * @memberOf registerLogInLogOut
     * @description Handles uer registration. Creates a new user (uding Firebase native method 'createUserWithEmailAndPassword'). Extracts username from user's email (username is anything that comes before @ symbol e.g. john06@gmail.com will have username of john06). Uses promises to add user to the database after they are created. Each user is listed under their unique Id provided by Firebase authentication system (user.uid)
+    Assigns user to team and updates the team counts, as well as boolean counter in the database;
   */
+
+
   $scope.register = function() {
     var register = databaseAndAuth.auth.createUserWithEmailAndPassword($scope.email, $scope.password);
+
     register.then(function(user) {
       databaseAndAuth.database.ref('users/' + user.uid).set({
         username: $scope.email.slice(0, $scope.email.indexOf('@')),
         email: $scope.email,
+        team: 'red'
       });
       $rootScope.loggedIn = true;
+      
+      //team assignment
+      var assignedTeam;
+      if(databaseAndAuth.team.bool) {
+        var count = databaseAndAuth.team.blue + 1;
+        databaseAndAuth.database.ref('team/').update({
+          blue: count
+        });
+        assignedTeam = 'blue';
+      } else {
+        var count = databaseAndAuth.team.red + 1;
+        databaseAndAuth.database.ref('team/').update({
+          red: count
+        });
+        assignedTeam = 'red';
+      }
+      databaseAndAuth.database.ref('users/' + user.uid).update({
+          team: assignedTeam
+      });
+      databaseAndAuth.database.ref('team/').update({
+        bool: !databaseAndAuth.team.bool
+      })
+      runListeners.teamAssigned();
+
       $location.path('/map');
     })
+
     register.catch(function(error) {
       console.log(error.message);
     });
@@ -92,6 +123,31 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
       $scope.$apply();
     });
   };
+
+  /**
+    * @function '$scope.checkUserLocation'
+    * @memberOf registerLogInLogOut
+    * @description Logs out users who are inactive for a specific time interval;
+  */
+
+
+  $scope.userPreviousLocation = null;
+  $scope.checkUserLocation = function() {
+   if ( $scope.userPreviousLocation === null || $rootScope.loggedIn === false ) {
+     $scope.userPreviousLocation = $rootScope.currentUserLoc;
+     console.log('First time check user location');
+   } else {
+     console.log('Compare previousLocation and currentLocation');
+     console.log('previousLocation', $scope.userPreviousLocation);
+     console.log('currentLocation', $rootScope.currentUserLoc);
+     if ( JSON.stringify($scope.userPreviousLocation) === JSON.stringify($rootScope.currentUserLoc) ) {
+       console.log('Kick out inactive user');
+       $scope.logOut();
+     }
+   }
+ };
+
+ setInterval($scope.checkUserLocation, 90000);
   /**
     * @function $scope.showPartial
     * @memberOf registerLogInLogOut
@@ -105,7 +161,8 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
     * @memberOf registerLogInLogOut
     * @description controls the signup button if you are not logged in ($rootScope.attemptSignup is false). The function toggles the attemptSignup variable depending on the user's status (logged in or not)
   */
-  $rootScope.attemptSignup = false;
+  // $rootScope.team = false;
+  // $rootScope.attemptSignup = false;
   $scope.signUp = function () {
     console.log($rootScope.attemptSignup);
     $rootScope.attemptSignup = !$rootScope.attemptSignup;
@@ -119,11 +176,14 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
   */
   databaseAndAuth.auth.onAuthStateChanged(function(databaseUser) {
     if (databaseUser) {
+
       console.log('calling this function');
       localStorage.setItem('user', databaseUser);
+      runListeners.initUsers();
       runListeners.childChanged();
       runListeners.childAdded();
       runListeners.childRemoved();
+      runListeners.teamAssigned();
       $rootScope.loggedIn = true;
       $rootScope.userCredentials = {
         email: databaseUser.email
@@ -132,7 +192,15 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
       getUsers();
       $rootScope.$broadcast('user:logIn', databaseUser.uid);
       $scope.userId = databaseUser.uid;
+      //set the team if it doesn't already exist
+      if (Object.keys(databaseAndAuth.users).length === 1) {
+        console.log('should not run')
+        var teamInit = {bool: true, red: 1, blue: 0};
+        databaseAndAuth.database.ref('team').set(teamInit);
+      }
       $scope.$apply();
+
+
     } else {
       $rootScope.loggedIn = false;
       $scope.$apply();

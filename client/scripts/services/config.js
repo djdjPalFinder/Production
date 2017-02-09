@@ -5,11 +5,11 @@
 angular.module('myApp').config(function($routeProvider, $locationProvider, $httpProvider) {
   // Initialize Firebase
   var config = {
-    apiKey: "AIzaSyCSF__t5JCHIT3uDZIynD_wb4CU9OzON4M",
-    authDomain: "djs-djs-pal-finder.firebaseapp.com",
-    databaseURL: "https://djs-djs-pal-finder.firebaseio.com",
-    storageBucket: "djs-djs-pal-finder.appspot.com",
-    messagingSenderId: "896407695774"
+    apiKey: "AIzaSyDwImvGhB-lbBSlMwHaoH_wMhuRen4c5CI",
+    authDomain: "perched-dd384.firebaseapp.com",
+    databaseURL: "https://perched-dd384.firebaseio.com",
+    storageBucket: "perched-dd384.appspot.com",
+    messagingSenderId: "791147440152"
   };
   firebase.initializeApp(config);
 
@@ -51,10 +51,10 @@ angular.module('myApp').config(function($routeProvider, $locationProvider, $http
         */
       if (localStorage.getItem('user')){
         console.log(localStorage.getItem('user'));
-        $rootScope.loggedIn = true;
+        $rootScope.loggedIn = false;
       }
       /**
-        * @class $rootScope.attemptSignup 
+        * @class $rootScope.attemptSignup
         * @description variable that determines if user clicked on "signup" button
       */
     $rootScope.attemptSignup = false;
