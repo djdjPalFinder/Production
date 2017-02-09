@@ -4,71 +4,46 @@
 */
 angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $scope, $location, databaseAndAuth, runListeners) {
 
-  /*set up boolean for team assignment*/
-  databaseAndAuth.database.ref('team/').set({
-    bool: true,
-    red: 0,
-    blue: 0
-  });
-
-  var meow = databaseAndAuth.database.ref('team/bool');
-  console.log(meow, "this should be the boolean")
-
-
-// databaseAndAuth.database.ref('users/' + user.uid).set({
-//   username: $scope.email.slice(0, $scope.email.indexOf('@')),
-//   email: $scope.email,
-//   team: myteam
-// });
-
-
-
   /**
     * @function '$scope.register'
     * @memberOf registerLogInLogOut
     * @description Handles uer registration. Creates a new user (uding Firebase native method 'createUserWithEmailAndPassword'). Extracts username from user's email (username is anything that comes before @ symbol e.g. john06@gmail.com will have username of john06). Uses promises to add user to the database after they are created. Each user is listed under their unique Id provided by Firebase authentication system (user.uid)
   */
 
-if (Object.keys(databaseAndAuth.users).length === 0) {
-  console.log('should not run')
-  var teamInit = {bool: true, red: 0, blue: 0};
-  databaseAndAuth.database.ref('team').set(teamInit);
-}
-
-
-
-  //
-
-  // $rootScope.r = 0;
-  // $rootScope.b = 0;
-  // //maybe can change to $scope.bool... needs to be tested
-  // $rootScope.bool = true;
-  // $scope.assignTeam = function () {
-  //   $rootScope.bool = !$rootScope.bool;
-  //   if($rootScope.bool) {
-  //     $rootScope.b += 1;
-  //     return "blue";
-  //   } else {
-  //     $rootScope.r += 1;
-  //     return "red";
-  //   }
-  // };
-
 
   $scope.register = function() {
     var register = databaseAndAuth.auth.createUserWithEmailAndPassword($scope.email, $scope.password);
-
-    // var myteam = $scope.assignTeam();
-    //console.log($rootScope.b, "team blue!");
-    //console.log($rootScope.r, "team red!");
 
     register.then(function(user) {
       databaseAndAuth.database.ref('users/' + user.uid).set({
         username: $scope.email.slice(0, $scope.email.indexOf('@')),
         email: $scope.email,
-        //team: myteam
+        team: "filler"
       });
       $rootScope.loggedIn = true;
+      var teamA;
+      if(databaseAndAuth.team.bool) {
+        // databaseAndAuth.database.ref('team/blue').update({
+        //   blue: databaseAndAuth.team.blue ++;
+        // });
+        teamA = "blue";
+      } else {
+        // databaseAndAuth.database.ref('team/red').update({
+        //   red: databaseAndAuth.team.red ++;
+        // });
+        // databaseAndAuth.team.red += 1;
+        teamA = "red";
+      }
+      databaseAndAuth.database.ref('users/' + user.uid).update({
+          team: teamA
+      });
+      console.log(databaseAndAuth.team, "database team")
+
+      databaseAndAuth.database.ref('team/').update({
+        bool: !databaseAndAuth.team.bool
+      })
+      runListeners.teamAssigned();
+      // console.log(databaseAndAuth.team.bool, "team after update")
       $location.path('/map');
     })
 
@@ -164,6 +139,7 @@ if (Object.keys(databaseAndAuth.users).length === 0) {
   */
   databaseAndAuth.auth.onAuthStateChanged(function(databaseUser) {
     if (databaseUser) {
+
       console.log('calling this function');
       localStorage.setItem('user', databaseUser);
       runListeners.childChanged();
@@ -178,6 +154,12 @@ if (Object.keys(databaseAndAuth.users).length === 0) {
       getUsers();
       $rootScope.$broadcast('user:logIn', databaseUser.uid);
       $scope.userId = databaseUser.uid;
+      //set the team if it doesn't already exist
+      if (Object.keys(databaseAndAuth.users).length === 0) {
+        console.log('should not run')
+        var teamInit = {bool: true, red: 0, blue: 0};
+        databaseAndAuth.database.ref('team').set(teamInit);
+      }
       $scope.$apply();
     } else {
       $rootScope.loggedIn = false;
