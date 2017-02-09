@@ -8,5 +8,6 @@ angular.module('myApp').factory('databaseAndAuth', function($window, $geolocatio
   factory.team = {};
   factory.auth = firebase.auth();
   factory.database = firebase.database();
+  
   return factory;
 });

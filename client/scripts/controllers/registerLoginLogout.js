@@ -29,7 +29,16 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
     * @description Handles uer registration. Creates a new user (uding Firebase native method 'createUserWithEmailAndPassword'). Extracts username from user's email (username is anything that comes before @ symbol e.g. john06@gmail.com will have username of john06). Uses promises to add user to the database after they are created. Each user is listed under their unique Id provided by Firebase authentication system (user.uid)
   */
 
+if (Object.keys(databaseAndAuth.users).length === 0) {
+  console.log('should not run')
+  var teamInit = {bool: true, red: 0, blue: 0};
+  databaseAndAuth.database.ref('team').set(teamInit);
+}
+
+
+
   //
+<<<<<<< HEAD
   $rootScope.r = 0;
   $rootScope.b = 0;
   //maybe can change to $scope.bool... needs to be tested
@@ -48,20 +57,40 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
 //need to set up a category in firebase for a team assignment boolean
   //when new user signs up, toggle
     //then assign based on this value (from DB)
+=======
+  // $rootScope.r = 0;
+  // $rootScope.b = 0;
+  // //maybe can change to $scope.bool... needs to be tested
+  // $rootScope.bool = true;
+  // $scope.assignTeam = function () {
+  //   $rootScope.bool = !$rootScope.bool;
+  //   if($rootScope.bool) {
+  //     $rootScope.b += 1;
+  //     return "blue";
+  //   } else {
+  //     $rootScope.r += 1;
+  //     return "red";
+  //   }
+  // };
+
+>>>>>>> df62c79f181dc5ed30c1a888b755d633c07fe77f
   $scope.register = function() {
     var register = databaseAndAuth.auth.createUserWithEmailAndPassword($scope.email, $scope.password);
-    var myteam = $scope.assignTeam();
-    console.log($rootScope.b, "team blue!");
-    console.log($rootScope.r, "team red!");
+
+    // var myteam = $scope.assignTeam();
+    //console.log($rootScope.b, "team blue!");
+    //console.log($rootScope.r, "team red!");
+
     register.then(function(user) {
       databaseAndAuth.database.ref('users/' + user.uid).set({
         username: $scope.email.slice(0, $scope.email.indexOf('@')),
         email: $scope.email,
-        team: myteam
+        //team: myteam
       });
       $rootScope.loggedIn = true;
       $location.path('/map');
     })
+
     register.catch(function(error) {
       console.log(error.message);
     });
@@ -159,6 +188,7 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
       runListeners.childChanged();
       runListeners.childAdded();
       runListeners.childRemoved();
+      runListeners.teamAssigned();
       $rootScope.loggedIn = true;
       $rootScope.userCredentials = {
         email: databaseUser.email
