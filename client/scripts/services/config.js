@@ -5,12 +5,12 @@
 angular.module('myApp').config(function($routeProvider, $locationProvider, $httpProvider) {
   // Initialize Firebase
   var config = {
-    apiKey: "AIzaSyDmF-D2pSbPV7CqAeiuiUexrIASPf6wwr0",
-    authDomain: "phonetag-b8b41.firebaseapp.com",
-    databaseURL: "https://phonetag-b8b41.firebaseio.com",
-    storageBucket: "phonetag-b8b41.appspot.com",
-    messagingSenderId: "967535791489"
-  };
+      apiKey: "AIzaSyBJLwrmDAXzxaqlNsRt25cdZe-VK4VeBWg",
+      authDomain: "succulent-444b9.firebaseapp.com",
+      databaseURL: "https://succulent-444b9.firebaseio.com",
+      storageBucket: "succulent-444b9.appspot.com",
+      messagingSenderId: "919032950731"
+    };
   firebase.initializeApp(config);
 
   $locationProvider.html5Mode({
@@ -54,7 +54,7 @@ angular.module('myApp').config(function($routeProvider, $locationProvider, $http
         $rootScope.loggedIn = false;
       }
       /**
-        * @class $rootScope.attemptSignup 
+        * @class $rootScope.attemptSignup
         * @description variable that determines if user clicked on "signup" button
       */
     $rootScope.attemptSignup = false;
@@ -68,7 +68,7 @@ angular.module('myApp').config(function($routeProvider, $locationProvider, $http
         if ($rootScope.accessProfile === true) {
           console.log('accessing profile');
           $location.path('/profile');
-        } 
+        }
         else if ($rootScope.loggedIn === true) {
           console.log("logged in!");
           // no logged user, redirect to /login
