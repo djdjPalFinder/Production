@@ -18,27 +18,31 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
       databaseAndAuth.database.ref('users/' + user.uid).set({
         username: $scope.email.slice(0, $scope.email.indexOf('@')),
         email: $scope.email,
-        team: "filler"
+        team: 'filler'
       });
       $rootScope.loggedIn = true;
-      var teamA;
+      //team assignment
+      var assignedTeam;
       if(databaseAndAuth.team.bool) {
-        // databaseAndAuth.database.ref('team/blue').update({
-        //   blue: databaseAndAuth.team.blue ++;
-        // });
-        teamA = "blue";
+        var count = databaseAndAuth.team.blue + 1;
+        //update team count
+        databaseAndAuth.database.ref('team/').update({
+          blue: count
+        });
+        assignedTeam = 'blue';
       } else {
-        // databaseAndAuth.database.ref('team/red').update({
-        //   red: databaseAndAuth.team.red ++;
-        // });
-        // databaseAndAuth.team.red += 1;
-        teamA = "red";
+        var count = databaseAndAuth.team.red + 1;
+        //update team count
+        databaseAndAuth.database.ref('team/').update({
+          red: count
+        });
+        assignedTeam = 'red';
       }
+      //update team
       databaseAndAuth.database.ref('users/' + user.uid).update({
-          team: teamA
+          team: assignedTeam
       });
       console.log(databaseAndAuth.team, "database team")
-
       databaseAndAuth.database.ref('team/').update({
         bool: !databaseAndAuth.team.bool
       })
