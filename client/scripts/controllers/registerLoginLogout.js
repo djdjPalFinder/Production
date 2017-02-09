@@ -3,6 +3,26 @@
   * @description Controller for that handles user registration (new user), user login, and user logout. Makes use of databaseAndAuth and runListeners factories.
 */
 angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $scope, $location, databaseAndAuth, runListeners) {
+
+  /*set up boolean for team assignment*/
+  databaseAndAuth.database.ref('team/').set({
+    bool: true,
+    red: 0,
+    blue: 0
+  });
+
+  var meow = databaseAndAuth.database.ref('team/bool');
+  console.log(meow, "this should be the boolean")
+
+
+// databaseAndAuth.database.ref('users/' + user.uid).set({
+//   username: $scope.email.slice(0, $scope.email.indexOf('@')),
+//   email: $scope.email,
+//   team: myteam
+// });
+
+
+
   /**
     * @function '$scope.register'
     * @memberOf registerLogInLogOut
@@ -14,6 +34,7 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
   $rootScope.b = 0;
   //maybe can change to $scope.bool... needs to be tested
   $rootScope.bool = true;
+  console.log($rootScope.bool, "bool for team assign")
   $scope.assignTeam = function () {
     $rootScope.bool = !$rootScope.bool;
     if($rootScope.bool) {
@@ -24,7 +45,9 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
       return "red";
     }
   };
-
+//need to set up a category in firebase for a team assignment boolean
+  //when new user signs up, toggle
+    //then assign based on this value (from DB)
   $scope.register = function() {
     var register = databaseAndAuth.auth.createUserWithEmailAndPassword($scope.email, $scope.password);
     var myteam = $scope.assignTeam();

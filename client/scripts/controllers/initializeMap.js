@@ -5,6 +5,7 @@
 
 angular.module('myApp').controller('initializeMap', function($scope, databaseAndAuth, NgMap) {
 
+
   $scope.$on('user:updatedOrAdded', function(event, data) {
     $scope.userLocations[data[0]] = data[1];
     console.log('user location added or updated', data[1]);
@@ -17,6 +18,7 @@ angular.module('myApp').controller('initializeMap', function($scope, databaseAnd
   });
   $scope.$on('user:logIn', function(event, data) {
     $scope.userLocations = databaseAndAuth.users;
+    // console.log('databaseanauth.users', databaseAndAuth.users);
     $scope.$apply();
   });
 
