@@ -9,36 +9,10 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
     * @description Handles uer registration. Creates a new user (uding Firebase native method 'createUserWithEmailAndPassword'). Extracts username from user's email (username is anything that comes before @ symbol e.g. john06@gmail.com will have username of john06). Uses promises to add user to the database after they are created. Each user is listed under their unique Id provided by Firebase authentication system (user.uid)
   */
 
-if (Object.keys(databaseAndAuth.users).length === 0) {
-  console.log('should not run')
-  var teamInit = {bool: true, red: 0, blue: 0};
-  databaseAndAuth.database.ref('team').set(teamInit);
-}
-
-
-
-  //
-  // $rootScope.r = 0;
-  // $rootScope.b = 0;
-  // //maybe can change to $scope.bool... needs to be tested
-  // $rootScope.bool = true;
-  // $scope.assignTeam = function () {
-  //   $rootScope.bool = !$rootScope.bool;
-  //   if($rootScope.bool) {
-  //     $rootScope.b += 1;
-  //     return "blue";
-  //   } else {
-  //     $rootScope.r += 1;
-  //     return "red";
-  //   }
-  // };
 
   $scope.register = function() {
     var register = databaseAndAuth.auth.createUserWithEmailAndPassword($scope.email, $scope.password);
 
-    // var myteam = $scope.assignTeam();
-    //console.log($rootScope.b, "team blue!");
-    //console.log($rootScope.r, "team red!");
 
     register.then(function(user) {
       databaseAndAuth.database.ref('users/' + user.uid).set({
@@ -157,6 +131,14 @@ if (Object.keys(databaseAndAuth.users).length === 0) {
       $rootScope.$broadcast('user:logIn', databaseUser.uid);
       $scope.userId = databaseUser.uid;
       $scope.$apply();
+
+      if (Object.keys(databaseAndAuth.users).length === 0) {
+        console.log('should not run')
+        var teamInit = {bool: true, red: 0, blue: 0};
+        databaseAndAuth.database.ref('team').set(teamInit);
+      }
+
+
     } else {
       $rootScope.loggedIn = false;
       $scope.$apply();
