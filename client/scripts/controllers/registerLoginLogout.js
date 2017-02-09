@@ -21,33 +21,30 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
         team: 'filler'
       });
       $rootScope.loggedIn = true;
+      
       //team assignment
       var assignedTeam;
       if(databaseAndAuth.team.bool) {
         var count = databaseAndAuth.team.blue + 1;
-        //update team count
         databaseAndAuth.database.ref('team/').update({
           blue: count
         });
         assignedTeam = 'blue';
       } else {
         var count = databaseAndAuth.team.red + 1;
-        //update team count
         databaseAndAuth.database.ref('team/').update({
           red: count
         });
         assignedTeam = 'red';
       }
-      //update team
       databaseAndAuth.database.ref('users/' + user.uid).update({
           team: assignedTeam
       });
-      console.log(databaseAndAuth.team, "database team")
       databaseAndAuth.database.ref('team/').update({
         bool: !databaseAndAuth.team.bool
       })
       runListeners.teamAssigned();
-      // console.log(databaseAndAuth.team.bool, "team after update")
+
       $location.path('/map');
     })
 
@@ -118,21 +115,11 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
     * @memberOf registerLogInLogOut
     * @description controls the signup button if you are not logged in ($rootScope.attemptSignup is false). The function toggles the attemptSignup variable depending on the user's status (logged in or not)
   */
-  $rootScope.team = false;
-  $rootScope.attemptSignup = false;
+  // $rootScope.team = false;
+  // $rootScope.attemptSignup = false;
   $scope.signUp = function () {
     console.log($rootScope.attemptSignup);
     $rootScope.attemptSignup = !$rootScope.attemptSignup;
-
-    console.log($scope, "scope obj within signup");
-    //implement team assignment
-    // if(!$rootScope.team) {
-    //   //place on red team
-    // } else {
-    //   //place on blue team
-    // }
-    $rootScope.team = !$rootScope.team;
-
     $location.path('/signup');
   }
   /**
