@@ -8,6 +8,7 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
     * @function '$scope.register'
     * @memberOf registerLogInLogOut
     * @description Handles uer registration. Creates a new user (uding Firebase native method 'createUserWithEmailAndPassword'). Extracts username from user's email (username is anything that comes before @ symbol e.g. john06@gmail.com will have username of john06). Uses promises to add user to the database after they are created. Each user is listed under their unique Id provided by Firebase authentication system (user.uid)
+    Assigns user to team and updates the team counts, as well as boolean counter in the database;
   */
 
 
@@ -102,6 +103,31 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
       $scope.$apply();
     });
   };
+
+  /**
+    * @function '$scope.checkUserLocation'
+    * @memberOf registerLogInLogOut
+    * @description Logs out users who are inactive for a specific time interval;
+  */
+
+
+  $scope.userPreviousLocation = null;
+  $scope.checkUserLocation = function() {
+   if ( $scope.userPreviousLocation === null || $rootScope.loggedIn === false ) {
+     $scope.userPreviousLocation = $rootScope.currentUserLoc;
+     console.log('First time check user location');
+   } else {
+     console.log('Compare previousLocation and currentLocation');
+     console.log('previousLocation', $scope.userPreviousLocation);
+     console.log('currentLocation', $rootScope.currentUserLoc);
+     if ( JSON.stringify($scope.userPreviousLocation) === JSON.stringify($rootScope.currentUserLoc) ) {
+       console.log('Kick out inactive user');
+       $scope.logOut();
+     }
+   }
+ };
+
+ setInterval($scope.checkUserLocation, 90000);
   /**
     * @function $scope.showPartial
     * @memberOf registerLogInLogOut
