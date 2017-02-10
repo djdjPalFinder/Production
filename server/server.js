@@ -34,6 +34,10 @@ var binaryServer = BinaryServer({ port: 9000 });
 //   // console.log(time, 'seconds passed since server started');
 // }, 500);
 
+var exampleClient = {
+  socketId: '123123',
+  client: {}
+};
 
 var clients = [];
 var numberOfUsers = 0;
@@ -41,24 +45,24 @@ var currentClientId = null;
 var firstPersonStartTime = null;
 
 binaryServer.on('connection', function(client) {
-  clients[client.id] = client;
+  clients[client.id] = {
+    client: client,
+    socketId: null
+  };
   currentClientId = client.id;
   console.log('in binary server, clientId : ', client.id, 'clients array : ', clients);
-
-  // console.log(client.id);
-  // client.send(client.id);
-  // var mp3File = path.join(__dirname, '/hehey.mp3');
-
 });
 
 var io = socketIo.listen(server);
 io.on('connection', function(socket) {
   numberOfUsers++;
+  clients[currentClientId].socketId = socket.id;
   console.log('a user connected', numberOfUsers);
 
   socket.on('disconnect', function() {
     numberOfUsers--;
     console.log('user disconnected', numberOfUsers);
+    console.log('disconnected user id : ', socket.id);
   });
 
   socket.on('songStarted', function(clientId) {
@@ -75,7 +79,7 @@ io.on('connection', function(socket) {
     console.log('clientId in getSong event', clientId);
     var songFilePath = path.join(__dirname, '/song.mp3');
     var file = fs.createReadStream(songFilePath);
-      clients[clientId].send(file);
+    clients[clientId].client.send(file);
     // if ( clientId !== null ) {
     // } else {
     //   console.log('song could not be sent');
@@ -98,8 +102,8 @@ io.on('connection', function(socket) {
       console.log('mp3 download finished');
       var mp3File = fs.createReadStream(path.join(__dirname, '/song.mp3'));
       firstPersonStartTime = getTime();
-      clients.forEach( function(client) {
-        client.send(mp3File);
+      clients.forEach( function(clientObj) {
+        clientObj.client.send(mp3File);
       });
     })
     .on('error', function(err) {

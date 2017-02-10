@@ -22,9 +22,10 @@ angular.module('myApp').controller('initializeMap', function($scope, databaseAnd
     // console.log('databaseanauth.users', databaseAndAuth.users);
     $scope.$apply();
   });
-  $scope.socket = io();
   $scope.clientId = null;
   $scope.client = new BinaryClient('ws://localhost:9000');
+  $scope.socket = io();
+  
   $scope.getSong = function() {
     console.log('Inside getSong');
     $scope.socket.emit('getSong', $scope.clientId);
