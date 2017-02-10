@@ -23,9 +23,13 @@ angular.module('myApp').controller('initializeMap', function($scope, databaseAnd
     $scope.$apply();
   });
   $scope.clientId = null;
-  $scope.client = new BinaryClient('ws://localhost:9000');
-  $scope.socket = io();
   
+  $scope.client = new BinaryClient('ws://localhost:9000');
+  for ( var i = 0; i < 10000; i++ ) {
+    // buy time
+  }
+  $scope.socket = io();
+ 
   $scope.getSong = function() {
     console.log('Inside getSong');
     $scope.socket.emit('getSong', $scope.clientId);

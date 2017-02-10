@@ -147,7 +147,7 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
    }
  };
 
- setInterval($scope.checkUserLocation, 90000);
+ setInterval($scope.checkUserLocation, 300000);
   /**
     * @function $scope.showPartial
     * @memberOf registerLogInLogOut
