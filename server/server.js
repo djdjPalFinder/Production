@@ -42,7 +42,9 @@ var exampleClient = {
 var clients = [];
 var numberOfUsers = 0;
 var currentClientId = null;
+var currentSocketId = null;
 var firstPersonStartTime = null;
+var currentClients = {};
 
 binaryServer.on('connection', function(client) {
   clients[client.id] = {
@@ -50,19 +52,27 @@ binaryServer.on('connection', function(client) {
     socketId: null
   };
   currentClientId = client.id;
-  console.log('in binary server, clientId : ', client.id, 'clients array : ', clients);
+  console.log('new client!', clients);
+  // console.log('in binary server, clientId : ', client.id, 'clients array : ', clients);
 });
 
 var io = socketIo.listen(server);
 io.on('connection', function(socket) {
   numberOfUsers++;
-  clients[currentClientId].socketId = socket.id;
+  var count = 0;
+  currentSocketId = socket.id;
   console.log('a user connected', numberOfUsers);
-
+  console.log('clients array', clients);
   socket.on('disconnect', function() {
     numberOfUsers--;
+    // clients = clients.filter( function(clientObj) {
+    //   return clientObj.socketId !== socket.id;
+    // });
+    currentClients[socket.id] = undefined;
+    delete currentClients[socket.id];
     console.log('user disconnected', numberOfUsers);
     console.log('disconnected user id : ', socket.id);
+    console.log('current clients array', clients);
   });
 
   socket.on('songStarted', function(clientId) {
@@ -79,7 +89,9 @@ io.on('connection', function(socket) {
     console.log('clientId in getSong event', clientId);
     var songFilePath = path.join(__dirname, '/song.mp3');
     var file = fs.createReadStream(songFilePath);
-    clients[clientId].client.send(file);
+    if ( clients[clientId] ) {
+      clients[clientId].client.send(file);    
+    }
     // if ( clientId !== null ) {
     // } else {
     //   console.log('song could not be sent');
@@ -87,8 +99,12 @@ io.on('connection', function(socket) {
   });
 
   socket.on('getId', function() {
-    socket.emit('getId', currentClientId);
+    console.log('current client id before error', currentClientId);
+    clients[currentClientId].socketId = currentSocketId;
+    currentClients[currentSocketId] = clients[currentClientId].client;
     console.log('send clientId back to user', currentClientId);
+    console.log('current clients array', clients);
+    socket.emit('getId', currentClientId);
   });
 
   socket.on('searchYoutube', function(videoId) {
@@ -102,9 +118,10 @@ io.on('connection', function(socket) {
       console.log('mp3 download finished');
       var mp3File = fs.createReadStream(path.join(__dirname, '/song.mp3'));
       firstPersonStartTime = getTime();
-      clients.forEach( function(clientObj) {
-        clientObj.client.send(mp3File);
-      });
+      console.log('current cleints : ', currentClients);
+      for ( var client in currentClients ) {
+        currentClients[client].send(mp3File);
+      }
     })
     .on('error', function(err) {
       console.log('Error in downloading the song : ', err);
