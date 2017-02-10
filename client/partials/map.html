@@ -27,6 +27,10 @@
     <div>
       <audio id="audioPlayer" loop="true" width="0" height="0" ></audio>
       <button ng-click="getSong()">Join the Party</button>
+      <form>
+      <input type="text" ng-model="searchText" ng-change="handleChange(searchText)" autofocus /><br/>
+        <button type="submit" ng-click="getYoutube()">DJ Song</button>
+      </form>
     </div>
 </div> 
 

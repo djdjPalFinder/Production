@@ -23,13 +23,16 @@ server.listen(3000, function () {
  /**************************************************************
  Socket.Io and BinaryJS
  *************************************************************/
+var getTime = function() {
+  return (new Date).getTime().toString().slice(6) / 1000;
+};
 
 var binaryServer = BinaryServer({ port: 9000 });
-var time = 0;
-setInterval( function() {
-  time++;
-  // console.log(time, 'seconds passed since server started');
-}, 1000);
+// var time = 0;
+// setInterval( function() {
+//   time += .5;
+//   // console.log(time, 'seconds passed since server started');
+// }, 500);
 
 
 var clients = [];
@@ -45,16 +48,7 @@ binaryServer.on('connection', function(client) {
   // console.log(client.id);
   // client.send(client.id);
   // var mp3File = path.join(__dirname, '/hehey.mp3');
-  // var lucky = 'https://www.youtubeinmp3.com/fetch/?video=https://www.youtube.com/watch?v=acvIVA9-FMQ';
-  // var source = fs.createWriteStream(path.join(__dirname, './song.mp3'));
-  // request
-  // .get(lucky)
-  // .pipe(source)
-  // .on('finish', function() {
-  //   console.log('mp3 download finished');
-  //   var file = fs.createReadStream(path.join(__dirname, '/song.mp3'));
-  //   client.send(file);
-  // });
+
 });
 
 var io = socketIo.listen(server);
@@ -69,11 +63,11 @@ io.on('connection', function(socket) {
 
   socket.on('songStarted', function(clientId) {
     if ( clientId === 0 ) {
-      firstPersonStartTime = time;
-      console.log('The first person started listening @ ', time);
+      firstPersonStartTime = getTime();
+      console.log('The first person started listening @ ', getTime());
     } else {
-      socket.emit('changePlayTime', time - firstPersonStartTime);
-      console.log('The song started in the client side : ', time);
+      socket.emit('changePlayTime', getTime() - firstPersonStartTime);
+      console.log('The song started in the client side : ', getTime());
     }
   });
 
@@ -81,13 +75,38 @@ io.on('connection', function(socket) {
     console.log('clientId in getSong event', clientId);
     var songFilePath = path.join(__dirname, '/song.mp3');
     var file = fs.createReadStream(songFilePath);
-    clients[clientId].send(file);
+      clients[clientId].send(file);
+    // if ( clientId !== null ) {
+    // } else {
+    //   console.log('song could not be sent');
+    // }
   });
 
   socket.on('getId', function() {
     socket.emit('getId', currentClientId);
     console.log('send clientId back to user', currentClientId);
   });
+
+  socket.on('searchYoutube', function(videoId) {
+    var songDownloadUrl = 'https://www.youtubeinmp3.com/fetch/?video=https://www.youtube.com/watch?v=' + videoId;
+    var savePath = fs.createWriteStream(path.join(__dirname, './song.mp3'));
+
+    request
+    .get(songDownloadUrl)
+    .pipe(savePath)
+    .on('finish', function() {
+      console.log('mp3 download finished');
+      var mp3File = fs.createReadStream(path.join(__dirname, '/song.mp3'));
+      firstPersonStartTime = getTime();
+      clients.forEach( function(client) {
+        client.send(mp3File);
+      });
+    })
+    .on('error', function(err) {
+      console.log('Error in downloading the song : ', err);
+    });
+  });
+
 });
 
 /**************************************************************

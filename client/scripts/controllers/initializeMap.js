@@ -3,7 +3,7 @@
   * @description Controller for Google Maps. Makes use of databaseAndAuth factory in order to retrieve/update chat messages from the databse. Listens for any changes in $rootScope (broadcasted by services), and then takes in the new (broadcasted) data and applies it to $scope
 */
 
-angular.module('myApp').controller('initializeMap', function($scope, databaseAndAuth, NgMap) {
+angular.module('myApp').controller('initializeMap', function($scope, databaseAndAuth, NgMap, $rootScope) {
 
 
   $scope.$on('user:updatedOrAdded', function(event, data) {
@@ -37,7 +37,8 @@ angular.module('myApp').controller('initializeMap', function($scope, databaseAnd
     audioPlayer.preload = true;
     audioPlayer.autoplay = true;
     audioPlayer.controls = 'controls';
-    
+    audioPlayer.src = null;
+
     stream.on('data', function(data) {
       parts.push(data);
     });
@@ -64,29 +65,33 @@ angular.module('myApp').controller('initializeMap', function($scope, databaseAnd
     audioPlayer.currentTime = currentSongTime;
     console.log('inside changePlayTime event listener');
   });
-  // Youtube
-  axios({
-    url: 'https://www.googleapis.com/youtube/v3/search',
-    method: 'get',
-    params: {
-      part: 'snippet',
-      // remember to hide the key to a variable!
-      key: 'AIzaSyDFXqX6S69-lw5DsBdYgsygRoBavtNPyKY',
-      q: context.state.value
-    }
-  })
-  .then( function(youtubeResponse) {
-  // wait for Youtube res to come back
-    console.log('youtube search success!');
-    // grab the array of videos, which live in data.items
-    var searchResult = youtubeResponse.data.items;
-
-    context.setState({searchResults: searchResult});
-
-    console.log('This is youtubeResponse : ', youtubeResponse);
-
-  })
-  .catch( function(err) {
-    console.log('youtube search fail', err);
-  });
+  $scope.searchText = '';
+  $scope.getYoutube = function() {
+    console.log('This was query : ', $scope.searchText);
+    axios({
+      url: 'https://www.googleapis.com/youtube/v3/search',
+      method: 'get',
+      params: {
+        part: 'snippet',
+        key: 'AIzaSyDFXqX6S69-lw5DsBdYgsygRoBavtNPyKY',
+        q: $scope.searchText
+      }
+    })
+    .then( function(youtubeResponse) {
+      console.log('youtube search success!');
+      var searchResult = youtubeResponse.data.items;
+      var songInfo = searchResult[0];
+      var songId = songInfo.id.videoId;
+      $scope.socket.emit('searchYoutube', songId);
+      console.log('This is youtubeResponse : ', searchResult);
+    })
+    .catch( function(err) {
+      console.log('youtube search fail', err);
+    });
+    $scope.searchText = '';
+  };
+  $scope.handleChange = function(value) {
+    $scope.searchText = value;
+    console.log('inside handleChange', value);
+  };
 });
