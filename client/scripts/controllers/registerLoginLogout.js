@@ -26,16 +26,16 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
       //team assignment
       var assignedTeam;
       if(databaseAndAuth.team.bool) {
-        var count = databaseAndAuth.team.blue;
-        databaseAndAuth.database.ref('team/').update({
-          blue: count + 1
-        });
+        // var count = databaseAndAuth.team.blue;
+        // databaseAndAuth.database.ref('team/').update({
+        //   blue: count + 1
+        // });
         assignedTeam = 'blue';
       } else {
-        var count = databaseAndAuth.team.red;
-        databaseAndAuth.database.ref('team/').update({
-          red: count + 1
-        });
+        // var count = databaseAndAuth.team.red;
+        // databaseAndAuth.database.ref('team/').update({
+        //   red: count + 1
+        // });
         assignedTeam = 'red';
       }
       databaseAndAuth.database.ref('users/' + user.uid).update({
@@ -50,7 +50,7 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
     })
 
     register.catch(function(error) {
-      console.log(error.message);
+      console.log('error at register', error.message);
     });
   };
   /**
@@ -96,9 +96,9 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
       $scope.userPreviousLocation = $rootScope.currentUserLoc;
       console.log('First time check user location');
     } else {
-      console.log('Compare previousLocation and currentLocation');
-      console.log('previousLocation', $scope.userPreviousLocation);
-      console.log('currentLocation', $rootScope.currentUserLoc);
+      // console.log('Compare previousLocation and currentLocation');
+      // console.log('previousLocation', $scope.userPreviousLocation);
+      // console.log('currentLocation', $rootScope.currentUserLoc);
       if ( JSON.stringify($scope.userPreviousLocation) === JSON.stringify($rootScope.currentUserLoc) ) {
         console.log('Kick out inactive user');
         $scope.logOut();
@@ -117,7 +117,7 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
       localStorage.removeItem('user');
       $rootScope.$broadcast('user:loggedOut', '');
       databaseAndAuth.auth.signOut();
-      console.log('user logged out: ', $scope.userId);
+      // console.log('user logged out: ', $scope.userId);
       $rootScope.loggedIn = false;
       $location.path('/');
       $scope.$apply();
@@ -138,8 +138,8 @@ angular.module('myApp').controller('registerLogInLogOut', function($rootScope, $
      console.log('First time check user location');
    } else {
      console.log('Compare previousLocation and currentLocation');
-     console.log('previousLocation', $scope.userPreviousLocation);
-     console.log('currentLocation', $rootScope.currentUserLoc);
+     // console.log('previousLocation', $scope.userPreviousLocation);
+     // console.log('currentLocation', $rootScope.currentUserLoc);
      if ( JSON.stringify($scope.userPreviousLocation) === JSON.stringify($rootScope.currentUserLoc) ) {
        console.log('Kick out inactive user');
        $scope.logOut();
