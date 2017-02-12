@@ -50,15 +50,15 @@ angular.module('myApp').factory('runListeners', function(databaseAndAuth, $rootS
     * @description Listens for team assignment to 'red' or 'blue'
   */
 
-  listener.teamAssigned = function () {
-    databaseAndAuth.database.ref('team').on('value', function (snapshot) {
-      console.log('snapshot', snapshot.val())
-      databaseAndAuth.team = snapshot.val();
+  // listener.teamAssigned = function () {
+  //   databaseAndAuth.database.ref('team').on('value', function (snapshot) {
+  //     console.log('snapshot', snapshot.val())
+  //     databaseAndAuth.team = snapshot.val();
 
-      // $rootScope.$broadcast('team:')
-      console.log("database inside factory", databaseAndAuth.team)
-    });
-  }
+  //     // $rootScope.$broadcast('team:')
+  //     console.log("database inside factory", databaseAndAuth.team)
+  //   });
+  // }
 
   /**
     * @function initUsers
@@ -67,12 +67,12 @@ angular.module('myApp').factory('runListeners', function(databaseAndAuth, $rootS
   */
 
 
-  listener.initUsers = function () {
-    databaseAndAuth.database.ref('users').once('value', function (snapshot) {
-      console.log('snapshot in initUsers', snapshot.val());
-      databaseAndAuth.users = snapshot.val();
-    })
-  }
+  // listener.initUsers = function () {
+  //   databaseAndAuth.database.ref('users').once('value', function (snapshot) {
+  //     console.log('snapshot in initUsers', snapshot.val());
+  //     databaseAndAuth.users = snapshot.val();
+  //   })
+  // }
 
   return listener;
 });
