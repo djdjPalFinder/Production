@@ -4,7 +4,7 @@
 
 ##Authors
 
-Andi Oneto, Cy Kong, Dj Kim,Jackie Ho
+Andi Oneto, Cy Kong, Dj Kim, Jackie Ho
 
 All authors were students at Hack Reactor at the time of the project (class HR 53)
 
